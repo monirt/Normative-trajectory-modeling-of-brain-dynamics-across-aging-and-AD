@@ -1,4 +1,4 @@
-
+%converting brain scans(nifti files) to region by time-series for CN subjects
 clear;
 spm('defaults', 'fmri');
 
