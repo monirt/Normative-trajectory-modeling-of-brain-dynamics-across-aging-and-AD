@@ -1,0 +1,71 @@
+
+clear;
+spm('defaults', 'fmri');
+
+base_dir   = '/home/taimoumh/ADNI/CN/';
+t1_dir     = fullfile(base_dir, 'matched_mri');
+fmri_dir   = fullfile(base_dir, 'matched_fmri');
+output_dir = fullfile(base_dir, 'conn_project_CN');
+
+t1_files   = dir(fullfile(t1_dir, '*.nii'));
+fmri_files = dir(fullfile(fmri_dir, '*.nii'));
+nsubj      = 374;
+
+structurals = cell(nsubj, 1);
+functionals = cell(nsubj, 1);
+
+for i = 1:nsubj
+    t1_name = t1_files(i).name;
+    subj_id = extractBetween(t1_name, 'S_', '_MPRAGE'); % get subject ID
+
+    % Find corresponding fMRI file
+    fmri_match = contains({fmri_files.name}, subj_id);
+    if ~any(fmri_match)
+        error(['No matching fMRI file found for ', subj_id{1}]);
+    end
+
+    fmri_name = fmri_files(fmri_match).name;
+
+    structurals{i} = {fullfile(t1_dir, t1_name)};
+    functionals{i} = {fullfile(fmri_dir, fmri_name)};
+end
+
+batch.filename = fullfile(output_dir, 'conn_craddock_CN.mat');
+batch.parallel.N = 0;
+
+batch.Setup.isnew = 1;
+batch.Setup.nsubjects = nsubj;
+batch.Setup.RT = 3;
+
+batch.Setup.structurals = structurals;
+batch.Setup.functionals = functionals;
+batch.Setup.rois.names = {'Craddock_840'};
+batch.Setup.rois.files = {'/home/taimoumh/ADNI/Craddock_integer.nii'};
+batch.Setup.rois.dimensions = 1;        
+batch.Setup.rois.multiplelabels = 1;     
+%batch.Setup.rois = {atlas_path};
+batch.Setup.acquisitiontype = 1;
+batch.Setup.analysis = 1;
+batch.Setup.outputfiles = [1 1 1];
+batch.Setup.preprocessing.steps = {
+    'functional_center',
+    'functional_slicetime',
+    'functional_realign&unwarp',
+    'functional_coregister',
+    'structural_segment',
+    'functional_normalize',
+    'functional_smooth'
+};
+batch.Setup.preprocessing.sliceorder = 'ascending';
+batch.Setup.preprocessing.fwhm = 6;
+batch.Setup.done = 1;
+batch.Setup.overwrite = 1;
+
+batch.Denoising.done = 1;
+batch.Denoising.overwrite = 1;
+batch.Denoising.filter = [0.008, 0.09];
+
+batch.Analysis.done = 1;
+batch.Analysis.overwrite = 1;
+
+conn_batch(batch);
