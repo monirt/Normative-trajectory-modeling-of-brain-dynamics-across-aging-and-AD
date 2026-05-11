@@ -1,5 +1,5 @@
 # Normative-trajectory-modeling-of-brain-dynamics-across-aging-and-AD
-This study develops a dynamic neuroimaging framework to distinguish healthy brain aging from Alzheimer’s progression. Using an HMM trained on cognitively normal adults, it measures deviations from an age-adjusted entropy trajectory, showing increasing disruption from MCI to AD and highlighting a compact biomarker.
+This study develops a dynamic neuroimaging framework to distinguish Alzheimer’s progression from healthy brain aging. Using an HMM trained on cognitively normal adults, it measures deviations from an age-adjusted entropy trajectory, showing increasing disruption from MCI to AD and highlighting a compact biomarker.
 
 ## Data & Cohort Definition
 Resting-state functional MRI (rs-fMRI) data are obtained from the Alzheimer’s Disease Neuroimaging Initiative (ADNI), including cognitively normal (CN), mild cognitive impairment (MCI), and Alzheimer’s disease (AD) participants. Each subject contributed a single rs-fMRI scan and a T1-weighted structural image. Diagnostic labels are harmonized across metadata files and encoded as an ordinal disease stage variable (CN = 0, MCI = 1, AD = 2) for downstream analyses. Demographic information, including chronological age, was used only for statistical association analyses. 
